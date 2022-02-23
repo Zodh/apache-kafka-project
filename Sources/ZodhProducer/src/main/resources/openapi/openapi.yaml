@@ -1,0 +1,61 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0.0
+  title: Zodh Producer Server
+  description: A simple API that receives a POST request and publishes a message to an Apache Kafka queue/topic.
+
+servers:
+  - url: http://localhost:8080/
+
+paths:
+  /messages/publish:
+    post:
+      tags:
+        - Message Producer
+      description: "Endpoint that receives a String message."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ZodhMessageRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/ZodhMessageResponse'
+
+components:
+  schemas:
+
+    ZodhMessageRequest:
+      type: object
+      description: "Message producer request object."
+      properties:
+        message:
+          type: string
+          example: "Random published message"
+
+    ProducerResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: >
+            Valid values are:
+
+              - `MESSAGE_SENT`
+              - `MESSAGE_NOT_SENT`
+          enum:
+            - MESSAGE_SENT
+            - MESSAGE_NOT_SENT
+          example: "MESSAGE_SENT"
+
+  # ----- Responses -----
+
+  responses:
+    ZodhMessageResponse:
+      description: "Received."
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProducerResponse'
+  #  ---- /Added lines  ----------------------------------------
